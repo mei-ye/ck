@@ -816,6 +816,13 @@ variations:
       USE_CUDA: yes
       USE_GPU: yes
 
+  vulkan:
+    group: device
+    env:
+      CM_MLPERF_DEVICE: gpu
+      USE_CUDA: no
+      USE_GPU: yes
+
   tpu:
     group: device
     env:

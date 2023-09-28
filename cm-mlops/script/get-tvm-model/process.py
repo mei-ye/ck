@@ -7,7 +7,7 @@ if os.environ.get("CM_TVM_FRONTEND_FRAMEWORK", None) == "pytorch":
     import torchvision
     
 import tvm
-from tvm import relay, meta_schedule
+from tvm import relay, meta_schedule, auto_scheduler
 from tvm.driver.tvmc.frontends import load_model
 
 def get_shape_dict_from_onnx(
@@ -150,7 +150,28 @@ def compile_model(
                 params=params,
                 backend="vm" if use_vm else "graph"
             )
+    elif database:
+        print('TVM apply tuning log: ' + database)
+        build_conf["relay.backend.use_auto_scheduler"] = True
+        with auto_scheduler.ApplyHistoryBest(database):
+            with tvm.transform.PassContext(
+                opt_level=opt_level, 
+                config=build_conf
+            ):
+                if  use_vm:
+                    lib = tvm.relay.backend.vm.compile(
+                        mod=mod, 
+                        target=target, 
+                        params=params
+                    )
+                else:
+                    lib = tvm.relay.build(
+                        mod, 
+                        target=target, 
+                        params=params
+                    )
     else:
+        
         with tvm.transform.PassContext(
             opt_level=opt_level, 
             config=build_conf, 
@@ -190,6 +211,8 @@ def main() -> None:
     model_path = os.environ.get('CM_ML_MODEL_FILE_WITH_PATH', None)
     compiled_model = os.path.join(os.getcwd(), 'model-tvm.so')
     print('TVM model: ' + model_path)
+    log_file = os.path.join(os.getcwd(), 'log', 'model-tvm.json')
+    
     if model_path.endswith('.so') or model_path.endswith('.dylib'):
         compiled_model = model_path
         if not os.path.isfile(compiled_model):
@@ -215,19 +238,34 @@ def main() -> None:
             'CM_MLPERF_TVM_TARGET',
             f"llvm -num-cores {os.environ.get('CM_HOST_CPU_TOTAL_CORES', '1')}"
         )
+        print('TVM target: ' + target)
         build_conf = {}
-        target_host = None
+        target_host = os.environ.get(
+            'CM_MLPERF_TVM_TARGET_HOST',
+            f"None"
+        )
+        print('TVM target host: ' + target_host)
+        tvm_home = os.environ.get(
+            'TVM_HOME',
+            f"None"
+        )
+        print('TVM home: ' + tvm_home)        
         tvm_target = tvm.target.Target(target, host=target_host)
+
         tune_model_flag = os.environ.get('CM_TUNE_TVM_MODEL', 'no') == 'yes'
         work_dir = ''
         database = None
         use_vm = os.environ.get('CM_TVM_USE_VM', 'no') == 'yes'
+        
         if tune_model_flag:
             work_dir, database = tune_model(
                 mod=mod, 
                 params=params, 
                 target=tvm_target, 
             )
+        else:
+            database = log_file if os.path.isfile(log_file) else None
+            
         lib = compile_model(
             mod=mod,
             params=params,

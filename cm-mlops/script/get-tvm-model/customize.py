@@ -42,7 +42,6 @@ def postprocess(i):
 
     env['CM_ML_MODEL_ORIGINAL_FILE_WITH_PATH'] = env['CM_ML_MODEL_FILE_WITH_PATH']
     env['CM_ML_MODEL_FILE'] = 'model-tvm.so'
-    env['CM_ML_MODEL_PATH'] = os.path.join(os.getcwd())
     env['CM_ML_MODEL_FILE_WITH_PATH'] = os.path.join(
         os.getcwd(), env['CM_ML_MODEL_FILE'])
     env['CM_ML_MODEL_FRAMEWORK'] = "tvm-" + env['CM_ML_MODEL_FRAMEWORK']

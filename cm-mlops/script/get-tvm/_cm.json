@@ -32,7 +32,9 @@
   "default_env": {
     "CM_GIT_CHECKOUT": "main",
     "CM_GIT_URL": "https://github.com/apache/tvm",
-    "CM_TVM_PIP_INSTALL": "no"
+    "CM_TVM_PIP_INSTALL": "no",
+    "CM_GIT_SHA": "33232deefbfe6e49c291136147743f0c27c8ff54",
+    "CM_TVM_USE_VULKAN": "yes"
   },
   "extra_cache_tags_from_env": [
     {

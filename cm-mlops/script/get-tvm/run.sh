@@ -53,6 +53,10 @@ if [ ! -d "${CUR_DIR}/tvm/build" ]; then
         echo 'set(USE_CUDA ON)' >> config.cmake
     fi
 
+    if [[ ${CM_TVM_USE_VULKAN} == "yes" ]]; then
+        echo 'set(USE_VULKAN ON)' >> config.cmake
+    fi        
+
     cmake ..
     test $? -eq 0 || exit 1
 fi
