@@ -171,7 +171,6 @@ def compile_model(
                         params=params
                     )
     else:
-        
         with tvm.transform.PassContext(
             opt_level=opt_level, 
             config=build_conf, 
@@ -251,12 +250,10 @@ def main() -> None:
         )
         print('TVM home: ' + tvm_home)        
         tvm_target = tvm.target.Target(target, host=target_host)
-
         tune_model_flag = os.environ.get('CM_TUNE_TVM_MODEL', 'no') == 'yes'
         work_dir = ''
         database = None
         use_vm = os.environ.get('CM_TVM_USE_VM', 'no') == 'yes'
-        
         if tune_model_flag:
             work_dir, database = tune_model(
                 mod=mod, 

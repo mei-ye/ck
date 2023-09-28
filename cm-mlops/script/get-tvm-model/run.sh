@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [ ! -d "log" ]; then
-    echo "git clone --recursive ${CM_GIT_LOG_URL} log"
-    git clone --recursive ${CM_GIT_LOG_URL} log
+    echo "git clone --recursive ${CM_GIT_URL} -b "${CM_GIT_CHECKOUT}" log"
+    git clone --recursive ${CM_GIT_URL} -b "${CM_GIT_CHECKOUT}" log
     test $? -eq 0 || exit 1
 fi
 

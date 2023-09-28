@@ -37,7 +37,8 @@
     "CM_TVM_FRONTEND_FRAMEWORK": "onnx",
     "CM_MLPERF_TVM_TARGET": "vulkan -keys=vulkan,gpu --supports_float32=1 --supports_float64=1 --supports_int8=1 --supports_int16=1 --supports_int32=1 --supports_int64=1 --supports_8bit_buffer=1 --supports_16bit_buffer=1 --supports_storage_buffer_storage_class=1 --supports_push_descriptor=1 --supports_dedicated_allocation=1 --supports_integer_dot_product=1 --supported_subgroup_operations=255 --max_num_threads=1024 --thread_warp_size=64 --max_block_size_x=1024 --max_block_size_y=1024 --max_block_size_z=1024 --max_push_constants_size=128 --max_shared_memory_per_block=65536",
     "CM_MLPERF_TVM_TARGET_HOST": "llvm",
-    "CM_GIT_LOG_URL": "https://github.com/mei-ye/log.git"      
+    "CM_GIT_URL": "https://github.com/mei-ye/log.git",
+    "CM_GIT_CHECKOUT": "main"
   },
   "new_env_keys": [
     "CM_ML_MODEL_*",
